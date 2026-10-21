@@ -1,0 +1,14 @@
+node_modules/
+.env
+data/profile.yaml
+db/*.db
+db/*.db-shm
+db/*.db-wal
+db/backups/
+artifacts/resumes/*
+artifacts/cover_letters/*
+artifacts/screenshots/*
+!artifacts/resumes/.gitkeep
+!artifacts/cover_letters/.gitkeep
+!artifacts/screenshots/.gitkeep
+.DS_Store

@@ -1,0 +1,298 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="data:,">
+  <title>Resume Automation Demo</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f6f7f9;
+      --panel: #fff;
+      --line: #d9dee7;
+      --text: #1d2433;
+      --muted: #667085;
+      --blue: #2563eb;
+      --green: #15803d;
+      --amber: #b45309;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--line);
+      background: var(--panel);
+    }
+    h1 { margin: 0; font-size: 20px; }
+    main {
+      display: grid;
+      grid-template-columns: 1.2fr 0.9fr 0.9fr;
+      gap: 16px;
+      padding: 16px;
+    }
+    section {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      min-width: 0;
+    }
+    .section-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--line);
+    }
+    h2 { margin: 0; font-size: 15px; }
+    .body { padding: 14px; }
+    .controls { display: flex; gap: 8px; flex-wrap: wrap; }
+    button {
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      padding: 8px 11px;
+      background: #fff;
+      color: var(--text);
+      font-weight: 600;
+      cursor: pointer;
+    }
+    button.primary { background: var(--blue); border-color: var(--blue); color: #fff; }
+    button.active { border-color: var(--blue); color: var(--blue); }
+    label { display: block; margin: 10px 0 5px; font-size: 13px; color: var(--muted); }
+    input {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      padding: 9px 10px;
+      font-size: 14px;
+      background: #fff;
+    }
+    .job-title { font-size: 22px; font-weight: 700; margin-bottom: 6px; }
+    .muted { color: var(--muted); font-size: 13px; }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      padding: 4px 8px;
+      background: #eef4ff;
+      color: #1d4ed8;
+      font-size: 12px;
+      font-weight: 700;
+    }
+    .kv {
+      display: grid;
+      grid-template-columns: 110px 1fr;
+      gap: 8px;
+      padding: 7px 0;
+      border-bottom: 1px solid #eef1f5;
+      font-size: 14px;
+    }
+    .kv span:first-child { color: var(--muted); }
+    ol { margin: 0; padding-left: 20px; }
+    li { margin: 10px 0; }
+    .status {
+      display: grid;
+      gap: 8px;
+      margin-top: 10px;
+    }
+    .step {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      color: var(--muted);
+    }
+    .step.done { border-color: #bbf7d0; background: #f0fdf4; color: var(--green); }
+    .step.current { border-color: #fde68a; background: #fffbeb; color: var(--amber); }
+    .dot { width: 8px; height: 8px; border-radius: 50%; background: currentColor; }
+    pre {
+      overflow: auto;
+      margin: 0;
+      padding: 12px;
+      border-radius: 7px;
+      background: #111827;
+      color: #e5e7eb;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+    @media (max-width: 980px) {
+      main { grid-template-columns: 1fr; }
+      header { align-items: flex-start; flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div>
+      <h1>Resume Automation Demo</h1>
+      <div class="muted">演示：手动打开申请页后，系统识别 ATS 并自动填写到等待确认</div>
+    </div>
+    <div class="controls">
+      <button id="greenhouseBtn" class="active">Greenhouse</button>
+      <button id="leverBtn">Lever</button>
+      <button id="runBtn" class="primary">运行自动填写</button>
+      <button id="resetBtn">重置</button>
+    </div>
+  </header>
+
+  <main>
+    <section>
+      <div class="section-head">
+        <h2>当前已打开的申请页</h2>
+        <span id="atsPill" class="pill">greenhouse</span>
+      </div>
+      <div class="body">
+        <div class="job-title" id="jobTitle">AI Solutions Intern</div>
+        <div class="muted" id="jobMeta">Acme Health AI · Beijing · boards.greenhouse.io</div>
+
+        <form id="applicationForm">
+          <label for="firstName">First Name</label>
+          <input id="firstName" name="first_name" autocomplete="off">
+          <label for="lastName">Last Name</label>
+          <input id="lastName" name="last_name" autocomplete="off">
+          <label for="fullName" id="fullNameLabel" hidden>Full Name</label>
+          <input id="fullName" name="name" autocomplete="off" hidden>
+          <label for="email">Email</label>
+          <input id="email" name="email" autocomplete="off">
+          <label for="phone">Phone</label>
+          <input id="phone" name="phone" autocomplete="off">
+          <label for="location">Location</label>
+          <input id="location" name="location" autocomplete="off">
+          <label for="resume">Resume</label>
+          <input id="resume" name="resume" value="artifacts/resumes/current.pdf" readonly>
+          <button type="button" disabled>Submit Application（演示中不会点击）</button>
+        </form>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-head"><h2>个人经历库 profile.yaml</h2></div>
+      <div class="body">
+        <div class="kv"><span>姓名</span><strong>王Cathy</strong></div>
+        <div class="kv"><span>邮箱</span><strong>xxx@example.com</strong></div>
+        <div class="kv"><span>电话</span><strong>xxx</strong></div>
+        <div class="kv"><span>地点</span><strong>Beijing / Tokyo</strong></div>
+        <div class="kv"><span>技能</span><strong>Python, PyTorch, YOLO, Playwright, LLM API</strong></div>
+        <h2 style="margin:18px 0 8px">适配器动作</h2>
+        <ol id="actions">
+          <li>等待运行</li>
+        </ol>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-head"><h2>投递数据库 applications</h2></div>
+      <div class="body">
+        <div class="status" id="statusList"></div>
+        <h2 style="margin:18px 0 8px">本次运行结果</h2>
+        <pre id="result">{ "status": "idle" }</pre>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const profile = {
+      name: "王Cathy",
+      firstName: "王Cathy",
+      lastName: "王Cathy",
+      email: "xxx@example.com",
+      phone: "xxx",
+      location: "Beijing / Tokyo"
+    };
+    const statuses = ["collected", "matched", "resume_ready", "form_filled", "waiting_review", "submitted"];
+    let ats = "greenhouse";
+
+    const $ = (id) => document.getElementById(id);
+    $("greenhouseBtn").onclick = () => switchAts("greenhouse");
+    $("leverBtn").onclick = () => switchAts("lever");
+    $("runBtn").onclick = runDemo;
+    $("resetBtn").onclick = resetForm;
+
+    switchAts("greenhouse");
+
+    function switchAts(next) {
+      ats = next;
+      $("greenhouseBtn").classList.toggle("active", ats === "greenhouse");
+      $("leverBtn").classList.toggle("active", ats === "lever");
+      $("atsPill").textContent = ats;
+      const lever = ats === "lever";
+      $("jobTitle").textContent = lever ? "Medical AI Intern" : "AI Solutions Intern";
+      $("jobMeta").textContent = lever ? "Acme Medical · Tokyo · jobs.lever.co" : "Acme Health AI · Beijing · boards.greenhouse.io";
+      $("firstName").closest("label");
+      $("firstName").hidden = lever;
+      document.querySelector("label[for=firstName]").hidden = lever;
+      $("lastName").hidden = lever;
+      document.querySelector("label[for=lastName]").hidden = lever;
+      $("fullName").hidden = !lever;
+      $("fullNameLabel").hidden = !lever;
+      resetForm();
+    }
+
+    function resetForm() {
+      for (const input of document.querySelectorAll("input:not([readonly])")) input.value = "";
+      $("actions").innerHTML = "<li>等待运行</li>";
+      renderStatuses("collected");
+      $("result").textContent = JSON.stringify({ status: "idle", ats_type: ats }, null, 2);
+    }
+
+    function runDemo() {
+      const filled = [];
+      if (ats === "lever") {
+        $("fullName").value = profile.name;
+        filled.push("name");
+      } else {
+        $("firstName").value = profile.firstName;
+        $("lastName").value = profile.lastName;
+        filled.push("first_name", "last_name");
+      }
+      $("email").value = profile.email;
+      $("phone").value = profile.phone;
+      $("location").value = profile.location;
+      filled.push("email", "phone", "location", "resume");
+
+      $("actions").innerHTML = [
+        "读取当前页面 URL",
+        `识别 ATS：${ats}`,
+        "读取 data/profile.yaml",
+        "填写姓名、邮箱、电话、地点",
+        "挂载简历路径 artifacts/resumes/current.pdf",
+        "停在 Submit 前，等待人工确认"
+      ].map((text) => `<li>${text}</li>`).join("");
+
+      renderStatuses("waiting_review");
+      $("result").textContent = JSON.stringify({
+        ok: true,
+        ats_type: ats,
+        job: {
+          title: $("jobTitle").textContent,
+          company: ats === "lever" ? "Acme Medical" : "Acme Health AI",
+          url: ats === "lever" ? "https://jobs.lever.co/acme/456" : "https://boards.greenhouse.io/acme/jobs/123"
+        },
+        fill: { filled, skipped: [] },
+        next_status: "waiting_review",
+        screenshot_path: "artifacts/screenshots/demo-current-page.png"
+      }, null, 2);
+    }
+
+    function renderStatuses(current) {
+      const currentIndex = statuses.indexOf(current);
+      $("statusList").innerHTML = statuses.map((status, index) => {
+        const cls = index < currentIndex ? "done" : index === currentIndex ? "current" : "";
+        return `<div class="step ${cls}"><span class="dot"></span><strong>${status}</strong></div>`;
+      }).join("");
+    }
+  </script>
+</body>
+</html>

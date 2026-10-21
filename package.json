@@ -1,0 +1,13 @@
+{
+  "name": "job-workbench-demo",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "migrate": "node scripts/migrate.mjs",
+    "server": "node scripts/server.mjs",
+    "test": "node scripts/self-test.mjs && node scripts/api-self-test.mjs && node scripts/e2e-local.mjs"
+  },
+  "devDependencies": {
+    "playwright": "^1.52.0"
+  }
+}

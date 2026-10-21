@@ -1,0 +1,62 @@
+# Public example only. Copy this file to data/profile.yaml, then replace every
+# placeholder with your own information. data/profile.yaml is ignored by Git.
+basic:
+  name: "Demo Candidate"
+  email: "candidate@example.com"
+  phone: "000-0000-0000"
+  location: "Beijing"
+  identification: ""
+  preferred_work_location: "Beijing / Shanghai"
+  hometown: ""
+  birthday: ""
+  marital_status: ""
+  home_address: ""
+  registered_location: ""
+  nationality: ""
+  gender: ""
+  age: ""
+  experience_years: ""
+  highest_education: "Master"
+education:
+  - school: "Example University"
+    degree: "Master"
+    major: "Computer Science"
+    start_date: "2024-09"
+    end_date: "2027-06"
+experience:
+  - company: "Example Technology"
+    title: "Software Engineering Intern"
+    start_date: "2025-06"
+    end_date: "2025-09"
+    bullets:
+      - "Built an internal workflow prototype."
+projects:
+  - name: "Job Application Workspace"
+    bullets:
+      - "Designed a local workflow for collecting and reviewing roles."
+work_samples:
+  portfolio_url: "https://example.com"
+  description: "Replace with public work samples if appropriate."
+awards:
+  summary: ""
+competitions:
+  summary: ""
+certificates:
+  summary: ""
+languages:
+  primary: "Chinese"
+  proficiency: "English: professional working proficiency"
+self_evaluation:
+  text: "A detail-oriented candidate who enjoys building reliable tools."
+social_accounts:
+  linkedin: ""
+  github: "https://github.com/example"
+  other: ""
+emergency_contact:
+  name: ""
+  phone: ""
+  relationship: ""
+skills:
+  - JavaScript
+  - Python
+  - Playwright
